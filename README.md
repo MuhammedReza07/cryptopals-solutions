@@ -1,0 +1,2 @@
+# Solutions to the Cryptopals Crypto Challenges
+Because the only way to improve your cryptography cracking skills is by cracking a lot of crypto. Solutions written in Julia because `Julia > Python` every day of the week (yes, I am a performance freak).
