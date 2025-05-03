@@ -1,5 +1,7 @@
 module FrequencyAnalysis
 
+export find_char_distribution, find_char_frequencies, find_char_frequencies_dir, find_char_frequencies_txt, read_char_distribution, write_char_distribution
+
 #=
 Functions for performing frequency analysis on textual data.
 =#
