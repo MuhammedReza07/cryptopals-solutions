@@ -62,4 +62,36 @@ function find_ascii_letter_percentages_dir(ValueType::Type{<:Integer}, dir_path:
     find_char_percentages(f)
 end
 
+function write_char_percentage_table(percentages::Dict{Char, Float64}, file_path::AbstractString)
+    file = open(file_path, create = true, write = true)
+
+    for (c, p) in percentages
+        write(file, "$(c) $(p)\n")
+    end
+
+    close(file)
+end
+
+function read_char_percentage_table(file_path::AbstractString)::Dict{Char, Float64}
+    percentages = Dict{Char, Float64}()
+
+    # Should have even length.
+    data = open(io -> read(io, String), file_path) |> s -> split(s)
+    pair_count::Integer = (length(data) / 2)
+
+    for k = 1:pair_count
+        # Every key should only consist of a single character.
+        percentages[only(data[2 * k - 1])] = tryparse(Float64, data[2 * k])
+    end
+
+    percentages
+end
+
+#=
+Even more convenience for analysis of ENglish text.
+=#
+function write_ascii_letter_percentage_table_dir(ValueType::Type{<:Integer}, dir_path::AbstractString, file_path::AbstractString)
+    write_char_percentage_table(find_ascii_letter_percentages_dir(ValueType, dir_path), file_path)
+end
+
 end
