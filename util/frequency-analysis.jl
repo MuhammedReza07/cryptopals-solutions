@@ -4,8 +4,6 @@ module FrequencyAnalysis
 Functions for performing frequency analysis on textual data.
 =#
 
-is_ascii_letter(c::Char) = isascii(c) && isletter(c)
-
 function find_char_frequencies(f::Any, ValueType::Type{<:Integer}, s::AbstractString)::Dict{Char, ValueType}
     frequencies = Dict{Char, ValueType}()
 
