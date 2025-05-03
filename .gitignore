@@ -1,2 +1,5 @@
 # Text corpus for frequency analysis.
 /data/text-en
+
+# Ciphertexts downloaded from the Cryptopals site.
+/data/ciphertexts
