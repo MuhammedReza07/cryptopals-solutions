@@ -87,7 +87,7 @@ function read_char_distribution(file_path::AbstractString)::Dict{Char, Float64}
     distribution
 end
 
-# Even more convenience for analysis of ENglish text.
+# Even more convenience for analysis of English text.
 function write_ascii_letter_distribution_dir(ValueType::Type{<:Integer}, dir_path::AbstractString, file_path::AbstractString)
     write_char_distribution(find_ascii_letter_distribution_dir(ValueType, dir_path), file_path)
 end
