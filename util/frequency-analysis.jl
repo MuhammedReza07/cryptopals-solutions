@@ -41,39 +41,39 @@ function find_char_frequencies_dir(ValueType::Type{<:Integer}, dir_path::Abstrac
     frequencies
 end
 
-function find_char_percentages(frequencies::Dict{Char, <:Integer})::Dict{Char, Float64}
-    percentages = Dict{Char, Float64}()
+function find_char_distribution(frequencies::Dict{Char, <:Integer})::Dict{Char, Float64}
+    distribution = Dict{Char, Float64}()
 
     char_count = values(frequencies) |> sum
 
     for (c, f) in frequencies
-        percentages[c] = f / char_count
+        distribution[c] = f / char_count
     end
 
-    percentages
+    distribution
 end
 
 #=
 Convenience for analysis of English text. Letters with diacritics, 
 numerals, special characters, and whitespace should be excluded.
 =#
-function find_ascii_letter_percentages_dir(ValueType::Type{<:Integer}, dir_path::AbstractString)::Dict{Char, Float64}
+function find_ascii_letter_distribution_dir(ValueType::Type{<:Integer}, dir_path::AbstractString)::Dict{Char, Float64}
     f = find_char_frequencies_dir(ValueType, dir_path) |> d -> filter(((c, f),) -> isascii(c) && isletter(c), d)
-    find_char_percentages(f)
+    find_char_distribution(f)
 end
 
-function write_char_percentage_table(percentages::Dict{Char, Float64}, file_path::AbstractString)
+function write_char_distribution(distribution::Dict{Char, Float64}, file_path::AbstractString)
     file = open(file_path, create = true, write = true)
 
-    for (c, p) in percentages
+    for (c, p) in distribution
         write(file, "$(c) $(p)\n")
     end
 
     close(file)
 end
 
-function read_char_percentage_table(file_path::AbstractString)::Dict{Char, Float64}
-    percentages = Dict{Char, Float64}()
+function read_char_distribution(file_path::AbstractString)::Dict{Char, Float64}
+    distribution = Dict{Char, Float64}()
 
     # Should have even length.
     data = open(io -> read(io, String), file_path) |> s -> split(s)
@@ -81,17 +81,17 @@ function read_char_percentage_table(file_path::AbstractString)::Dict{Char, Float
 
     for k = 1:pair_count
         # Every key should only consist of a single character.
-        percentages[only(data[2 * k - 1])] = tryparse(Float64, data[2 * k])
+        distribution[only(data[2 * k - 1])] = tryparse(Float64, data[2 * k])
     end
 
-    percentages
+    distribution
 end
 
 #=
 Even more convenience for analysis of ENglish text.
 =#
-function write_ascii_letter_percentage_table_dir(ValueType::Type{<:Integer}, dir_path::AbstractString, file_path::AbstractString)
-    write_char_percentage_table(find_ascii_letter_percentages_dir(ValueType, dir_path), file_path)
+function write_ascii_letter_distribution_dir(ValueType::Type{<:Integer}, dir_path::AbstractString, file_path::AbstractString)
+    write_char_distribution(find_ascii_letter_distribution_dir(ValueType, dir_path), file_path)
 end
 
 end
