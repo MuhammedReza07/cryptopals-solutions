@@ -4,12 +4,14 @@ module FrequencyAnalysis
 Functions for performing frequency analysis on textual data.
 =#
 
-function find_char_frequencies(ValueType::Type{<:Integer}, s::AbstractString)::Dict{Char, ValueType}
+is_ascii_letter(c::Char) = isascii(c) && isletter(c)
+
+function find_char_frequencies(f::Any, ValueType::Type{<:Integer}, s::AbstractString)::Dict{Char, ValueType}
     frequencies = Dict{Char, ValueType}()
 
     for c in s
         # Invalid Unicode is probably irrelevant for most analyses.
-        if !isvalid(c)
+        if !(isvalid(c) && f(c))
             continue
         end
 
@@ -24,18 +26,18 @@ function find_char_frequencies(ValueType::Type{<:Integer}, s::AbstractString)::D
     frequencies
 end
 
-function find_char_frequencies_txt(ValueType::Type{<:Integer}, file_path::AbstractString)::Dict{Char, ValueType}
+function find_char_frequencies_txt(f::Any, ValueType::Type{<:Integer}, file_path::AbstractString)::Dict{Char, ValueType}
     s = open(io -> read(io, String), file_path)
-    find_char_frequencies(ValueType, s)
+    find_char_frequencies(f, ValueType, s)
 end
 
-function find_char_frequencies_dir(ValueType::Type{<:Integer}, dir_path::AbstractString)::Dict{Char, ValueType}
+function find_char_frequencies_dir(f::Any, ValueType::Type{<:Integer}, dir_path::AbstractString)::Dict{Char, ValueType}
     frequencies = Dict{Char, ValueType}()
 
     txt_files = readdir(dir_path)
     
     for txt in txt_files
-        find_char_frequencies_txt(ValueType, dir_path * txt) |> f -> mergewith!(+, frequencies, f)
+        find_char_frequencies_txt(f, ValueType, dir_path * txt) |> f -> mergewith!(+, frequencies, f)
     end
 
     frequencies
@@ -51,15 +53,6 @@ function find_char_distribution(frequencies::Dict{Char, <:Integer})::Dict{Char, 
     end
 
     distribution
-end
-
-#=
-Convenience for analysis of English text. Letters with diacritics, 
-numerals, special characters, and whitespace should be excluded.
-=#
-function find_ascii_letter_distribution_dir(ValueType::Type{<:Integer}, dir_path::AbstractString)::Dict{Char, Float64}
-    f = find_char_frequencies_dir(ValueType, dir_path) |> d -> filter(((c, f),) -> isascii(c) && isletter(c), d)
-    find_char_distribution(f)
 end
 
 function write_char_distribution(distribution::Dict{Char, Float64}, file_path::AbstractString)
@@ -85,11 +78,6 @@ function read_char_distribution(file_path::AbstractString)::Dict{Char, Float64}
     end
 
     distribution
-end
-
-# Even more convenience for analysis of English text.
-function write_ascii_letter_distribution_dir(ValueType::Type{<:Integer}, dir_path::AbstractString, file_path::AbstractString)
-    write_char_distribution(find_ascii_letter_distribution_dir(ValueType, dir_path), file_path)
 end
 
 end
