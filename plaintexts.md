@@ -35,3 +35,8 @@ in the REPL to yield
     (4, PlaintextCandidate(0.45065253260051347, 0x75, "01~bh)nTA[wiO{\u9b\x06\x06T)5Q\u85\u9e\x06I\u85s\u97qy"
 
 which reveals the plaintext. The ciphertext that generates the plaintext is thus the one on line 171 and the XOR key was `0x35`. The score range `[0.45, 0.75]` was chosen because short English text segments seem to have a score close to 0.5, although that assumption may have been incorrect in this case.
+
+#### Challenge 5
+Evaluate the expression below in the REPL.
+
+    repeating_key_xor(Vector{UInt8}("Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"), Vector{UInt8}("ICE")) |> bytes2hex
