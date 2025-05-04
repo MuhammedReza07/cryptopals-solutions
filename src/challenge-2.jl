@@ -1,5 +1,5 @@
 #=
-Function that produces the XOR combination of two buffers of equal length.
+Functions that produce the XOR combination of two buffers of equal length.
 =#
 
 function xor_buffers(a::Vector{UInt8}, b::Vector{UInt8})::Vector{UInt8}
@@ -10,4 +10,4 @@ function xor_buffers(a::Vector{UInt8}, b::Vector{UInt8})::Vector{UInt8}
     xor.(a, b)
 end
 
-xor_buffers_hex(a::AbstractString, b::AbstractString)::String = xor_buffers(hex2bytes(a), hex2bytes(b)) |> bytes2hex
+xor_buffers(a::AbstractString, b::AbstractString)::String = xor_buffers(hex2bytes(a), hex2bytes(b)) |> bytes2hex
